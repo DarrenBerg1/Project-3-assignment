@@ -1,0 +1,39 @@
+{% extends 'pages/home.html' %}
+{% load static %}
+{% block content %}
+<h1 class="search-text">Search</h1>
+
+<form method="get" action="{% url 'search' %}">
+  {% csrf_token %}
+  <input type="text" name="q" placeholder="Search products..." value="{{ query }}">
+  <button class="search-btn"type="submit">Search</button>
+</form>
+
+{% if query %}
+  <h2 class="search-text">Results for "{{ query }}"</h2>
+  {% if products %}
+    <ul>
+      {% for product in products %}
+      <div class="products-page">
+        <div class="col-lg-4">
+          {% if product.image %}
+           <img class="thumbnail" src="{{product.image.url}}">
+          {% else %}
+           <img class="thumbnail" src="{% static 'images/placeholder.png' %}">
+          {% endif %}
+        
+        <div class="box-element product">
+         <h6><strong>{{product.name}}</strong></h6>
+         <hr>
+         <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to cart</button>
+               <h4 style="display:inline-block; float: right"><strong>${{product.price|floatformat:2}}</strong></h4>
+        </div> 
+        </div>
+        </div>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No products found.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}
